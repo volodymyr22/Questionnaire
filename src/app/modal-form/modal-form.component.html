@@ -1,0 +1,69 @@
+<div class="container">
+  <form [formGroup]="questionForm" class="form">
+    <mat-form-field appearance="fill">
+      <mat-label>Question text</mat-label>
+      <input matInput formControlName="text" required="true" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Select a question type</mat-label>
+      <mat-select formControlName="type" required="true">
+        <mat-option
+          *ngFor="let type of questionType"
+          [value]="type"
+          (click)="checkQuestionType($event)"
+        >
+          {{ type }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      class="example-chip-list"
+      appearance="fill"
+      *ngIf="isOpenQuestion"
+    >
+      <mat-label>Answer options</mat-label>
+      <mat-chip-list #chipList aria-label="Answer options">
+        <mat-chip
+          *ngFor="let option of answerOptions"
+          (removed)="removeOption(option)"
+        >
+          {{ option }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+        <input
+          placeholder="New option..."
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="addOption($event)"
+        />
+      </mat-chip-list>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Right answer</mat-label>
+      <input matInput formControlName="answer" required="true" />
+    </mat-form-field>
+
+    <button
+      *ngIf="!isEdit"
+      type="submit"
+      mat-raised-button
+      class="option-btn"
+      (click)="addNewQuestion()"
+    >
+      Submit
+    </button>
+    <button
+      *ngIf="isEdit"
+      type="submit"
+      mat-raised-button
+      class="option-btn"
+      (click)="editQuestion()"
+    >
+      Save
+    </button>
+  </form>
+</div>
