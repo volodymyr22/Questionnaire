@@ -1,0 +1,73 @@
+<mat-card class="question-list__question">
+  <h5>{{ question.text }}</h5>
+  <div class="question-detail">
+    <!-- if Single choice question type-->
+    <mat-radio-group
+      aria-label="Select an option"
+      *ngIf="question.type === 'Single choice'"
+      class="answer-options"
+    >
+      <mat-radio-button
+        [value]="option"
+        *ngFor="let option of question.options"
+        style="margin-bottom: 10px"
+        [disabled]="question.isOpen"
+        (change)="checkRadioValue(option)"
+      >
+        {{ option }}
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <!-- If Multiple choice question type -->
+    <section class="answer-options" *ngIf="question.type === 'Multiple choice'">
+      <mat-checkbox
+        *ngFor="let option of question.options"
+        [disabled]="question.isOpen"
+        (change)="checkCheckBoxValue(option, $event)"
+      >
+        {{ option }}
+      </mat-checkbox>
+    </section>
+
+    <!-- If Open question type -->
+    <mat-form-field
+      class="example-full-width"
+      appearance="fill"
+      *ngIf="question.type === 'Open question'"
+      (change)="checkInput($event)"
+    >
+      <mat-label>Enter your answer</mat-label>
+      <input
+        matInput
+        placeholder="Enter your answer"
+        [disabled]="question.isOpen"
+        name="answer"
+      />
+    </mat-form-field>
+  </div>
+  <button
+    mat-raised-button
+    (click)="answer(question)"
+    [disabled]="question.isOpen"
+    *ngIf="question.isOpen"
+  >
+    Answer
+  </button>
+  <div class="answer">
+    <span *ngIf="!question.isOpen" class="info-right"
+      >Right answer: {{ question.answer }}</span
+    >
+    <span *ngIf="!question.isOpen" class="info-bad"
+      >Your answer: {{ question.your_answer }}</span
+    >
+  </div>
+  <div class="option-btn-container">
+    <button
+      mat-raised-button
+      *ngIf="!question.isOpen"
+      (click)="toUnAnswered(question)"
+    >
+      Move to unanswered
+    </button>
+  </div>
+</mat-card>
